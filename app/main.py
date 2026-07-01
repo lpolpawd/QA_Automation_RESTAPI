@@ -1,0 +1,80 @@
+from fastapi import FastAPI, HTTPException, status, Query
+from pydantic import BaseModel
+from app.database import produk_db
+from typing import Optional
+
+app = FastAPI()
+
+class Produk(BaseModel):
+    nama: str
+    harga: int
+    stok: int
+
+@app.get("/produk/cari", status_code=status.HTTP_200_OK)
+def cari_produk(nama: str):
+    # Satpam A: Cek apakah user iseng mengirimkan query kosong tapi gak ada isinya (misal ?nama= )
+    if nama is not None and nama.strip() == "":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Kata kunci pencarian tidak boleh kosong!"
+        )
+        
+    hasil_pencarian = []
+    
+    # Lakukan perulangan untuk mengecek satu-satu barang di dalam database RAM
+    for produk in produk_db:
+        # Cek apakah kata yang dicari ada di dalam nama produk (tidak peduli huruf besar/kecil)
+        if nama.lower() in produk["nama"].lower():
+            hasil_pencarian.append(produk)
+            
+    # Satpam B: Jika setelah dicari-cari ternyata hasilnya tetap kosong (tidak ketemu)
+    if len(hasil_pencarian) == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Produk dengan kata kunci '{nama}' tidak ditemukan"
+        )
+        
+    # Kembalikan daftar produk yang cocok
+    return hasil_pencarian
+
+@app.get("/produk")
+def get_semua_produk():
+    return produk_db
+
+@app.get("/produk/{id}")
+def get_produk(id: int):
+    if id >= len(produk_db) or id < 0:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Produk tidak ditemukan")
+    return produk_db[id]
+
+@app.post("/produk", status_code=201)
+def tambah_produk(produk: Produk):
+    produk_db.append(produk.model_dump())
+    return produk
+
+@app.put("/produk/{id}")
+def update_produk(id: int, produk_update: Produk):
+    # Cek apakah ID yang dimasukkan minus (tidak masuk akal)
+    if id < 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Produk tidak ditemukan (ID tidak valid)"
+        )
+        
+    # Satpam B: Cek apakah ID yang dicari ada di dalam list database kita
+    if id >= len(produk_db):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Produk dengan ID {id} tidak ditemukan"
+        )       
+    # Ganti isi barang lama di urutan [id] dengan data baru yang dikirim user
+    produk_db[id] = produk_update.model_dump()
+    
+    return {"message": "Produk berhasil diubah!"}
+
+@app.delete("/produk/{id}", status_code=200)
+def hapus_produk(id: int):
+    if id >= len(produk_db) or id < 0:
+        raise HTTPException(status_code=404, detail="Produk tidak ditemukan")
+    produk_db.pop(id)
+    return {"pesan": "Produk berhasil dihapus"}
