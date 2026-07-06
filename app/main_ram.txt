@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from app.database import produk_db
 
 app = FastAPI()
-
+# testing
 class Produk(BaseModel):
     nama: str
     harga: int

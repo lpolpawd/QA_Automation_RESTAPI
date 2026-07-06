@@ -18,7 +18,7 @@ def test_tambah_produk(client):
 
 def test_get_produk_by_id(client):
     client.post("/produk", json={"nama": "Sepatu", "harga": 300_000, "stok": 5})
-    response = client.get("/produk/0")
+    response = client.get("/produk/1")
     assert response.status_code == 200
     assert response.json()["nama"] == "Sepatu"
 
@@ -28,7 +28,7 @@ def test_get_produk_tidak_ditemukan(client):
 
 def test_hapus_produk(client):
     client.post("/produk", json={"nama": "Celana", "harga": 200_000, "stok": 3})
-    response = client.delete("/produk/0")
+    response = client.delete("/produk/1")
     assert response.status_code == 200
 
 def test_hapus_produk_tidak_ditemukan(client):
@@ -42,14 +42,14 @@ def test_update_produk_sukses(client):
     
     # Langkah 2: Ubah data di ID 0 jadi "Sepatu Roda", harga naik jadi 450rb
     data_baru = {"nama": "Sepatu Roda", "harga": 450_000, "stok": 5}
-    response = client.put("/produk/0", json=data_baru)
+    response = client.put("/produk/1", json=data_baru)
     
     # Langkah 3: Periksa hasilnya (Assert)
     assert response.status_code == 200
     assert response.json()["message"] == "Produk berhasil diubah!"
     
-    # Langkah 4: Opsional tapi bagus, kita GET lagi ID 0 buat mastiin di database RAM-nya beneran berubah
-    response_get = client.get("/produk/0")
+    # Langkah 4: Opsional tapi bagus, kita GET lagi ID buat mastiin di database-nya beneran berubah
+    response_get = client.get("/produk/1")
     assert response_get.json()["nama"] == "Sepatu Roda"
     assert response_get.json()["harga"] == 450_000
 
@@ -64,9 +64,9 @@ def test_update_produk_gagal_id_tidak_ada(client):
 
 def test_update_produk_stok_berubah(client):
     client.post("/produk", json={"nama": "Baju", "harga": 100_000, "stok": 3})
-    response = client.put("/produk/0", json={"nama": "Baju", "harga": 100_000, "stok": 10})
+    response = client.put("/produk/1", json={"nama": "Baju", "harga": 100_000, "stok": 10})
     assert response.status_code == 200
-    response_get = client.get("/produk/0")
+    response_get = client.get("/produk/1")
     assert response_get.json()["stok"] == 10
 
 # tidak bisa, hapus by column
