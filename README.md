@@ -1,5 +1,7 @@
 # Hasil Dari Pembelajaran QA Automation
 ![QA Automation](https://github.com/lpolpawd/QA_Automation_RESTAPI/actions/workflows/test.yml/badge.svg)
+---
+
 Project ini berfokus pada pembuatan REST API menggunakan framework FastApi, dan sqlite sebagai Database
 
 ## Tech Stack
