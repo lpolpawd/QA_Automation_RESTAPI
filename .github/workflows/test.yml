@@ -21,7 +21,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install fastapi uvicorn httpx2 pytest pytest-cov sqlalchemy
+          pip install fastapi uvicorn httpx2 pytest pytest-cov sqlalchemy pytest-playwright
+          playwright install
 
       - name: Jalankan test
         env:
