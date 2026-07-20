@@ -49,3 +49,23 @@ Langkah : 1. Kirim GET /produk/99 (ID yang tidak ada di database)
 Ekspektasi : Status 404, response not found
 Hasil Aktual : Status 404, response not found
 Status : Pass
+
+ID            : TC-005
+Judul         : Verifikasi produk tersimpan di database setelah POST
+Precondition  : Database kosong
+Langkah       : 1. Kirim POST /produk dengan data valid
+                2. Query langsung ke database: SELECT * FROM produk WHERE nama = 'Jaket'
+Ekspektasi    : Data ditemukan di database dengan nama, harga, stok yang sesuai
+Hasil Aktual  : Data ditemukan di database
+Status        : Pass
+
+---
+
+ID            : TC-006
+Judul         : Verifikasi produk terhapus dari database setelah DELETE
+Precondition  : Database berisi minimal 1 produk
+Langkah       : 1. Kirim DELETE /produk/{id}
+                2. Query langsung ke database: SELECT * FROM produk WHERE id = {id}
+Ekspektasi    : Data tidak ditemukan di database (hasil query NULL)
+Hasil Aktual  : Data tidak ditemukan di database
+Status        : Pass
