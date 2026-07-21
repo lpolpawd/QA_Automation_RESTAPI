@@ -25,8 +25,6 @@ This project provides two backend implementation variants for testing:
 
 and after that you can run pytest using the command `python3 -m pytest tests/ -v`. If you want to try it manually, you can run the uvicorn server using the command `uvicorn app.main_db:app --reload`
 
-**Kamu harus berada di root directory project**, lalu buat virtual environtment python, install requirements.txt menggunakan perintah `pip install -r requirements.txt` dan setelah itu bisa jalankan pytest menggunakan perintah `python3 -m pytest tests/ -v`. kalau mau mencoba manual bisa jalankan server uvicorn menggunakan perintah `uvicorn app.main_db:app --reload`
-
 ## Test Structure
 
 - `tests/test_api.py` — API endpoint tests using in-memory mock data
