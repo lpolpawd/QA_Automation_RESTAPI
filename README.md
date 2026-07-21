@@ -2,7 +2,18 @@
 ![QA Automation](https://github.com/lpolpawd/QA_Automation_RESTAPI/actions/workflows/test.yml/badge.svg)
 ---
 
-This project focuses on Testing a REST API using the FastApi as a backend framework, and sqlite as a database.Im using `pytest`, `pytest-playwright` to make the QA automation code, each of `tests/` file have different testing, and it functions according to the file names. **I use AAA formula to write this QA automation code**. you may see file like `main_ram.txt` and it also functions according to the file names, i'm using ram as the database, the reason why i change the format to .txt because it can messed up uvicorn server
+# English
+---
+## Summary
+This project focuses on Testing a REST API using the FastApi as a backend framework, and sqlite as a database.Im using `pytest`, `pytest-playwright` to make the QA automation code, each of `tests/` file have different testing, and it functions according to the file names. **I use AAA formula to write this QA automation code**.
+
+### 💡 Architecture Note: In-Memory Testing vs Real DB
+
+This project provides two backend implementation variants for testing:
+1. **SQLite Database Variant (`app/main_db.py`):** Used for full integration tests, including direct database verification via SQL queries.
+2. **In-Memory RAM Variant (`main_ram.txt`):** An isolated, lightweight service using RAM-based data storage for ultra-fast API unit testing without database side effects. 
+
+*Note: The RAM variant is stored as `.txt` to prevent Uvicorn CLI auto-discovery conflicts, ensuring clean application entry points when running `uvicorn app.main_db:app`.*
 
 ## Tech Stack
 - Python 3.12
@@ -12,20 +23,15 @@ This project focuses on Testing a REST API using the FastApi as a backend framew
 - pytest
 - GitHub Actions
 
-## How to Run this project | Cara Menjalankan Project ini dan QA Automation Test
-First you must be in the root projecy directory and install all the requirements.txt file with python 
-> pip install -r requirements.txt
-
-
 and after that you can run pytest using the command `python3 -m pytest tests/ -v`. If you want to try it manually, you can run the uvicorn server using the command `uvicorn app.main_db:app --reload`
 
 **Kamu harus berada di root directory project**, lalu buat virtual environtment python, install requirements.txt menggunakan perintah `pip install -r requirements.txt` dan setelah itu bisa jalankan pytest menggunakan perintah `python3 -m pytest tests/ -v`. kalau mau mencoba manual bisa jalankan server uvicorn menggunakan perintah `uvicorn app.main_db:app --reload`
 
-## Struktur Test
+## Test Structure
 
-- `tests/test_api.py` — API endpoint testing + RAM database
-- `tests/test_api_db.py` — API endpoint testing + verifikasi database
-- `tests/test_browser.py` — Browser automation testing pakai Playwright
+- `tests/test_api.py` — API endpoint tests using in-memory mock data
+- `tests/test_api_db.py` — Integration tests verifying API responses directly against the SQLite database.
+- `tests/test_browser.py` — E2E browser automation using Playwright
 
 ## Coverage
 
@@ -34,9 +40,30 @@ and after that you can run pytest using the command `python3 -m pytest tests/ -v
 - Browser automation (form filling, navigation)
 - Automated CI/CD via GitHub Actions
 
-## Yang Dicakup
+## 🚀 How to Run the Project
 
-- CRUD API testing (GET, POST, PUT, DELETE)
-- Verifikasi data langsung ke SQLite database
-- Browser automation (form filling, navigation)
-- CI/CD otomatis via GitHub Actions
+### 1. Prerequisites
+Clone the repository and navigate to the project root directory:
+```bash
+git clone https://github.com/lpolpawd/QA_Automation_RESTAPI.git
+cd QA_Automation_RESTAPI
+```
+
+### 2. Setup Virtual Environment & Install Dependencies
+```Bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 3. Run Automated Tests
+Execute all test cases with verbose output:
+```
+Bash
+python3 -m pytest tests/ -v
+4. (Optional) Run Application Server Manually
+If you want to test the endpoints manually via Swagger UI ([http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)):
+
+Bash
+uvicorn app.main_db:app --reload
+```
